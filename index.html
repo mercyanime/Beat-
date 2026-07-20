@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador Rap - Base con Palabras</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Cabecera */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            display: flex: center;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #ff8c00;
+            font-size: 28px;
+        }
+
+        .menu-btn {
+            font-size: 28px;
+            color: #ff8c00;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Pestañas */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            background: #1a1a1a;
+            color: #888;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .tab.active {
+            background: #111;
+            color: #ff8c00;
+            box-shadow: 0 0 0 2px #ff8c00;
+        }
+
+        .tab small {
+            display: block;
+            font-weight: normal;
+            font-size: 13px;
+            margin-top: 4px;
+            color: #666;
+        }
+
+        .tab.active small { color: #ffb766; }
+
+        /* Bloque de palabras */
+        .bloque-palabras {
+            background: #111;
+            border-radius: 16px;
+            padding: 40px 20px;
+            margin-bottom: 25px;
+            border: 2px solid #ff8c00;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .palabra {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: 900;
+            color: #ff8c00;
+            text-transform: capitalize;
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.15);
+            transition: opacity 0.2s ease;
+        }
+
+        /* Botón generar */
+        .btn-generar {
+            width: 100%;
+            padding: 18px;
+            border-radius: 12px;
+            border: none;
+            background: #ff8c00;
+            color: #000;
+            font-size: 22px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 30px;
+        }
+
+        .btn-generar:hover {
+            background: #ffaa33;
+            transform: translateY(-2px);
+        }
+
+        /* Reproductor */
+        .reproductor {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .reprod-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: #332211;
+            border: none;
+            color: #ff8c00;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .bpm {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ff8c00;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tipo-base {
+            font-size: 16px;
+            color: #aaa;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .tiempo {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #777;
+            margin: 10px 0;
+        }
+
+        .barra-progreso {
+            width: 100%;
+            height: 6px;
+            background: #222;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progreso {
+            height: 100%;
+            width: 0%;
+            background: #ff8c00;
+        }
+
+        .volumen {
+            width: 75%;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+            margin-right: 10px;
+        }
+
+        .volumen::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ff8c00;
+            cursor: pointer;
+        }
+
+        .loop-btn {
+            float: right;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #ff8c00;
+            background: #221808;
+            color: #ff8c00;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Secciones */
+        .seccion {
+            background: #111;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .seccion h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .opcion {
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .opcion:last-child { margin-bottom: 0; }
+
+        .opcion.activa {
+            background: #2b1d0d;
+            border: 1px solid #ff8c00;
+            color: #ff8c00;
+        }
+
+        .opcion small {
+            display: block;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .opcion.activa small { color: #ffb766; }
+    </style>
+</head>
+<body>
+
+<!-- Cabecera -->
+<div class="header">
+    <div class="logo">🎤</div>
+    <button class="menu-btn">☰</button>
+</div>
+
+<!-- Pestañas -->
+<div class="tabs">
+    <button class="tab active">
+        PALABRAS<br>ALEATORIAS
+        <small>Base de rap con palabras</small>
+    </button>
+    <button class="tab">Base de rap con<br>palabras</button>
+</div>
+
+<!-- Bloque de palabras -->
+<div class="bloque-palabras" id="bloquePalabras">
+    <div class="palabra" id="p1">secreto</div>
+    <div class="palabra" id="p2">tiempo</div>
+    <div class="palabra" id="p3">instinto</div>
+    <div class="palabra" id="p4">viento</div>
+</div>
+
+<!-- Botón generar -->
+<button class="btn-generar" onclick="generarNuevo()">🔄 GENERAR NUEVO BLOQUE</button>
+
+<!-- Reproductor -->
+<div class="reproductor">
+    <div class="reprod-top">
+        <button class="play-btn">▶</button>
+        <span class="bpm">🎵 90 BPM</span>
+        <div class="tipo-base">BOOM BAP</div>
+    </div>
+    <div class="barra-progreso"><div class="progreso"></div></div>
+    <div class="tiempo">
+        <span>0:00</span>
+        <span>1:04</span>
+    </div>
+    <input type="range" class="volumen" min="0" max="100" value="70">
+    <button class="loop-btn">🔁 Loop</button>
+</div>
+
+<!-- Sección MODO -->
+<div class="seccion">
+    <h3>MODO</h3>
+    <div class="opcion activa" onclick="cambiarModo('aleatorio', this)">
+        🎲 Aleatorias
+        <small>4 palabras mezcladas</small>
+    </div>
+    <div class="opcion" onclick="cambiarModo('rimas', this)">
+        🎵 Que riman entre sí
+        <small>4 palabras con la misma rima</small>
+    </div>
+</div>
+
+<!-- Sección FORMATO -->
+<div class="seccion">
+    <h3>FORMATO</h3>
+    <div class="opcion activa" onclick="cambiarFormato(this)">
+        📦 Bloque de 4 palabras
+    </div>
+    <div class="opcion" onclick="cambiarFormato(this)">
+        🥁 Cambio cada 4 compases
+    </div>
+    <div class="opcion" onclick="cambiarFormato(this)">
+        🎤 Usa una palabra por compás
+    </div>
+</div>
+
+<script>
+// Bases de palabras con sentido y estilo urbano
+const palabrasAleatorias = [
+    "secreto", "tiempo", "instinto", "viento", "camino", "destino", "fuego", "suelo",
+    "mente", "corriente", "sueño", "lejos", "fuerza", "certeza", "cicatriz", "raíz",
+    "luz", "oscuridad", "paso", "abismo", "alma", "calma", "grito", "silencio",
+    "cadena", "libertad", "llama", "esperanza", "vidrio", "papel", "cartón", "cristal",
+    "rastro", "pasado", "lado", "cuidado", "frente", "gente", "pequeño", "dueño",
+    "juego", "ciego", "vecino", "divino", "muro", "futuro", "duro", "seguro"
+];
+
+// Grupos de rimas coherentes
+const gruposRimas = [
+    ["amor", "dolor", "valor", "color"],
+    ["vida", "herida", "medida", "partida"],
+    ["mundo", "profundo", "segundo", "inmundo"],
+    ["lado", "pasado", "cuidado", "llegado"],
+    ["mente", "frente", "gente", "presente"],
+    ["sueño", "dueño", "pequeño", "enseño"],
+    ["fuego", "juego", "luego", "ciego"],
+    ["camino", "destino", "vecino", "divino"],
+    ["calma", "alma", "palma", "llama"],
+    ["fuerza", "certeza", "tristeza", "belleza"],
+    ["silencio", "sentencio", "potencio", "comprendo"],
+    ["abismo", "mismo", "optimismo", "esquema"]
+];
+
+let modoActual = 'aleatorio';
+
+// Generar nuevo bloque
+function generarNuevo() {
+    let nuevasPalabras = [];
+
+    if (modoActual === 'aleatorio') {
+        // Seleccionar 4 palabras únicas al azar
+        while (nuevasPalabras.length < 4) {
+            const p = palabrasAleatorias[Math.floor(Math.random() * palabrasAleatorias.length)];
+            if (!nuevasPalabras.includes(p)) nuevasPalabras.push(p);
+        }
+    } else {
+        // Seleccionar un grupo de rimas al azar
+        const grupo = gruposRimas[Math.floor(Math.random() * gruposRimas.length)];
+        nuevasPalabras = [...grupo];
+        // Mezclar el orden
+        nuevasPalabras.sort(() => Math.random() - 0.5);
+    }
+
+    // Actualizar en pantalla con animación
+    const ids = ['p1', 'p2', 'p3', 'p4'];
+    ids.forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.style.opacity = 0;
+        setTimeout(() => {
+            el.textContent = nuevasPalabras[i];
+            el.style.opacity = 1;
+        }, 200);
+    });
+}
+
+// Cambiar modo
+function cambiarModo(modo, elemento) {
+    modoActual = modo;
+    // Quitar activa de todos en la sección modo
+    document.querySelectorAll('.seccion:nth-child(7) .opcion').forEach(el => el.classList.remove('activa'));
+    elemento.classList.add('activa');
+    generarNuevo();
+}
+
+// Cambiar formato
+function cambiarFormato(elemento) {
+    document.querySelectorAll('.seccion:nth-child(8) .opcion').forEach(el => el.classList.remove('activa'));
+    elemento.classList.add('activa');
+}
+</script>
+</body>
+</html>
